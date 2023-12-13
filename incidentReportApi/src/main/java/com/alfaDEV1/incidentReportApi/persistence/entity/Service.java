@@ -1,7 +1,11 @@
 package com.alfaDEV1.incidentReportApi.persistence.entity;
 
+import java.util.List;
+
 public class Service {
-    private int idServicio;
-    private String nombre;
-    private String descripcion;
+    private int id;
+    private String name;
+    private String description;
+    private Client client;
+
 }

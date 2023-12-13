@@ -1,12 +1,23 @@
 package com.alfaDEV1.incidentReportApi.persistence.entity;
 
-import java.time.LocalDate;
+
+
+
+
+import java.time.LocalDateTime;
 
 public class Incident {
-    private int idIncidente;
-    private String descripcion;
-    private String tipo;
-    private LocalDate fechaReporte;
-    private String estado;
+    private int id;
+    private String name;
+    private String description;
+    private LocalDateTime reportDate;
+    private LocalDateTime estimatedResolutionDate;
+    private LocalDateTime resolutionDate;
+    private State state;
     private boolean colchonHoras;
+    private Service service;
+    private Client client;
+    private Technician technician;
+    private Operator operator;
+
 }
