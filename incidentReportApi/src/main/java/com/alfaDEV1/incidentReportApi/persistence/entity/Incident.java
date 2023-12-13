@@ -7,7 +7,7 @@ package com.alfaDEV1.incidentReportApi.persistence.entity;
 import java.time.LocalDateTime;
 
 public class Incident {
-    private int id;
+    private Long id;
     private String name;
     private String description;
     private LocalDateTime reportDate;
@@ -19,5 +19,6 @@ public class Incident {
     private Client client;
     private Technician technician;
     private Operator operator;
+    private IncidentType incidentType;
 
 }

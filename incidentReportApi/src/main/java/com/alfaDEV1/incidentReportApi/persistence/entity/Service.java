@@ -1,11 +1,13 @@
 package com.alfaDEV1.incidentReportApi.persistence.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Service {
-    private int id;
+    private Long id;
     private String name;
     private String description;
-    private Client client;
+    private List<Client> clientList = new ArrayList<>();
+    private List<Incident> incidentList = new ArrayList<>();
 
 }

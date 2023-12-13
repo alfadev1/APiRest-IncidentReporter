@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client {
-    private int idCliente;
-    private String razonSocial;
+    private Long id;
+    private String companyName;
+    private String name;
+    private String lastName;
     private int cuit;
 
     private List<Service> serviceList = new ArrayList<>();
