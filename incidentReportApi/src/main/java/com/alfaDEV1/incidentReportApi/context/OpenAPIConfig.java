@@ -23,10 +23,10 @@ public class OpenAPIConfig {
                 .url("https://choosealicense.com/licenses/mit/");
 
         Info info = new Info()
-                .title("Practica APIRest-SpringBoot")
-                .version("1")
+                .title("Incident Reporter APIRest-SpringBoot")
+                .version("0.0.1")
                 .contact(contact)
-                .description("Practica de anotaciones y mapeado de entidades.")
+                .description("Practica de anotaciones y mapeado de entidades, segun mi impronta.")
                 .termsOfService("https://www.example.com/terms")
                 .license(mitLicense);
 
