@@ -32,6 +32,7 @@ public class Service {
     @JsonIgnore
     private List<Incident> incidentList = new ArrayList<>();
     @ManyToMany(mappedBy = "serviceList")
+    @JsonIgnore
     private List<Client> clientList = new ArrayList<>();
 
 

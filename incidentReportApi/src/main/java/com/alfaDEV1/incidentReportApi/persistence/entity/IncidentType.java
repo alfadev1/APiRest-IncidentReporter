@@ -33,6 +33,7 @@ public class IncidentType {
     @JsonIgnore
     private List<Incident> incidentList= new ArrayList<>();
     @ManyToMany(mappedBy = "incidentTypeList")
+    @JsonIgnore
     private List<Specialty> specialtyList = new ArrayList<>();
 
 }

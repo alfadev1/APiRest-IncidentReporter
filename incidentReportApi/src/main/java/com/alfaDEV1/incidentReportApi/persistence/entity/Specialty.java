@@ -34,5 +34,6 @@ public class Specialty {
             joinColumns = @JoinColumn(name = "idSpecialty"),
             inverseJoinColumns = @JoinColumn(name = "idIncidentType")
             )
+    @JsonIgnore
     private List<IncidentType> incidentTypeList = new ArrayList<>();
 }

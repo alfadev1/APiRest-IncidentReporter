@@ -5,22 +5,18 @@ import com.alfaDEV1.incidentReportApi.persistence.entity.Client;
 import com.alfaDEV1.incidentReportApi.service.interfaces.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/clients")
-
 public class ClientController {
-
     @Autowired
     private IClientService clientService;
-
     @PostMapping("/saveClient")
     public ResponseEntity<?> saveClient(@RequestBody ClientDTO clientDTO) throws URISyntaxException {
         if (clientDTO.getName().isBlank() || clientDTO.getLastName().isBlank() || clientDTO.getCuit() == null) {
@@ -34,5 +30,60 @@ public class ClientController {
                 .build());
         return ResponseEntity.created(new URI("/api/clients/saveClient")).build();
     }
+    @DeleteMapping("/deleteClientById/{id}")
+    public ResponseEntity<?> deleteClientById(@PathVariable Long id) {
+        Optional<Client> clientOptional = clientService.findClientById(id);
+        if(clientOptional.isPresent()) {
+            clientService.deleteClientById(id);
+            return ResponseEntity.ok("Register Deleted");
+        }
+        return ResponseEntity.badRequest().build();
+    }
+    @GetMapping("/findClientById/{id}")
+    public ResponseEntity<?> findClientById(@PathVariable Long id) {
+        Optional<Client> clientOptional = clientService.findClientById(id);
+        if(clientOptional.isPresent()) {
+            Client client = clientOptional.get();
+            ClientDTO clientDTO = ClientDTO.builder()
+                    .name(client.getName())
+                    .lastName(client.getLastName())
+                    .cuit(client.getCuit())
+                    .build();
+            return ResponseEntity.ok(clientDTO);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    @GetMapping("/findAllClients")
+    public ResponseEntity<?> findAllClients() {
+        List<ClientDTO> clientDTOList =clientService.findAllClients()
+                .stream()
+                .map(client -> ClientDTO.builder()
+                        .name(client.getName())
+                        .lastName(client.getLastName())
+                        .cuit(client.getCuit())
+                        .build())
+                .toList();
+        return  ResponseEntity.ok(clientDTOList);
 
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

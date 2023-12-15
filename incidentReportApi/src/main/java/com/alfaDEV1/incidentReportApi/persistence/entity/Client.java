@@ -38,6 +38,7 @@ public class Client {
             joinColumns = @JoinColumn(name = "idClient"),
             inverseJoinColumns = @JoinColumn(name = "idService")
     )
+    @JsonIgnore
     private List<Service> serviceList = new ArrayList<>();
 
 }

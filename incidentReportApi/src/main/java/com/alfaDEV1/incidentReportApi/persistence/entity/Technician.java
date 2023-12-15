@@ -1,5 +1,6 @@
 package com.alfaDEV1.incidentReportApi.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +32,7 @@ public class Technician {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             orphanRemoval = true)
+    @JsonIgnore
     private List<Incident> incidentsList = new ArrayList<>();
 
 
