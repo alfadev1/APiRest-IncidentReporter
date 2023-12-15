@@ -19,7 +19,7 @@ public class ClientDTO {
     private String companyName;
     private String name;
     private String lastName;
-    private int cuit;
+    private Integer cuit;
     private List<Incident> incidentList = new ArrayList<>();
     private List<Service> serviceList = new ArrayList<>();
 }

@@ -24,7 +24,7 @@ public class Client {
     private String companyName;
     private String name;
     private String lastName;
-    private int cuit;
+    private Integer cuit;
     @OneToMany(
             mappedBy = "client",
             cascade = CascadeType.ALL,
