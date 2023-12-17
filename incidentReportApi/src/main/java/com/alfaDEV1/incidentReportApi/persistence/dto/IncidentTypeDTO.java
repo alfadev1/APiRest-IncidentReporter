@@ -17,6 +17,7 @@ import java.util.List;
 
 public class IncidentTypeDTO {
     private String name;
+    private String description;
     private int estimatedTime;
     private int maximumTime;
     private List<Incident> incidentList= new ArrayList<>();

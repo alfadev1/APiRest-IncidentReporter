@@ -23,6 +23,7 @@ public class IncidentType {
     @Column(name = "idIncidentType")
     private Long id;
     private String name;
+    private String description;
     private int estimatedTime;
     private int maximumTime;
     @OneToMany(

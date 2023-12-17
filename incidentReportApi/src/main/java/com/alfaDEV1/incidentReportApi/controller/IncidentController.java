@@ -1,19 +1,19 @@
 package com.alfaDEV1.incidentReportApi.controller;
 
 import com.alfaDEV1.incidentReportApi.persistence.dto.IncidentDTO;
+
 import com.alfaDEV1.incidentReportApi.persistence.entity.Incident;
 import com.alfaDEV1.incidentReportApi.persistence.entity.State;
 import com.alfaDEV1.incidentReportApi.service.interfaces.IIncidentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/incidents")
@@ -39,5 +39,61 @@ public class IncidentController {
                 .estimatedResolutionDate(LocalDateTime.now().plusHours(incidentDTO.getIncidentType().getEstimatedTime()))
                 .build());
             return ResponseEntity.created(new URI("/api/incidents/saveIncident")).build();
+    }
+
+    @DeleteMapping("/deleteIncidentById/{id}")
+    public ResponseEntity<?> deleteIncidentById(@PathVariable Long id) {
+        Optional<Incident> incidentOptional = incidentService.findIncidentById(id);
+        if (incidentOptional.isPresent()) {
+            incidentService.deleteIncidentById(id);
+            return ResponseEntity.ok("Register deleted");
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/findIncidentById/{id}")
+    public ResponseEntity<?> findClientById(@PathVariable Long id) {
+        Optional<Incident> incidentOptional = incidentService.findIncidentById(id);
+        if (incidentOptional.isPresent()) {
+            Incident incident = incidentOptional.get();
+            IncidentDTO incidentDTO = IncidentDTO.builder()
+                    .name(incident.getName())
+                    .description(incident.getDescription())
+                    .reportDate(incident.getReportDate())
+                    .estimatedResolutionDate(incident.getEstimatedResolutionDate())
+                    .resolutionDate(incident.getResolutionDate())
+                    .state(incident.getState())
+                    .colchonHoras(incident.isColchonHoras())
+                    .service(incident.getService())
+                    .client(incident.getClient())
+                    .technician(incident.getTechnician())
+                    .operator(incident.getOperator())
+                    .incidentType(incident.getIncidentType())
+                    .build();
+            return ResponseEntity.ok(incidentDTO);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/findAllIncidents")
+    public ResponseEntity<?> findAllIncident() {
+        List<IncidentDTO> incidentDTOList = incidentService.findAllIncidents()
+                .stream()
+                .map(incident -> IncidentDTO.builder()
+                        .name(incident.getName())
+                        .description(incident.getDescription())
+                        .reportDate(incident.getReportDate())
+                        .estimatedResolutionDate(incident.getEstimatedResolutionDate())
+                        .resolutionDate(incident.getResolutionDate())
+                        .state(incident.getState())
+                        .colchonHoras(incident.isColchonHoras())
+                        .service(incident.getService())
+                        .client(incident.getClient())
+                        .technician(incident.getTechnician())
+                        .operator(incident.getOperator())
+                        .incidentType(incident.getIncidentType())
+                        .build())
+                .toList();
+        return ResponseEntity.ok(incidentDTOList);
     }
 }
