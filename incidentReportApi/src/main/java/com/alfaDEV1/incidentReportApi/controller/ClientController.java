@@ -26,7 +26,7 @@ public class ClientController {
                 .name(clientDTO.getName())
                 .lastName(clientDTO.getLastName())
                 .cuit(clientDTO.getCuit())
-                .companyName("null")
+                .companyName(clientDTO.getCompanyName())
                 .build());
         return ResponseEntity.created(new URI("/api/clients/saveClient")).build();
     }
@@ -45,6 +45,7 @@ public class ClientController {
         if(clientOptional.isPresent()) {
             Client client = clientOptional.get();
             ClientDTO clientDTO = ClientDTO.builder()
+                    .companyName(client.getCompanyName())
                     .name(client.getName())
                     .lastName(client.getLastName())
                     .cuit(client.getCuit())
