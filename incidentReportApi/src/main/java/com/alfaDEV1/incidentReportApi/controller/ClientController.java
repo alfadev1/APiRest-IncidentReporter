@@ -2,7 +2,9 @@ package com.alfaDEV1.incidentReportApi.controller;
 
 import com.alfaDEV1.incidentReportApi.persistence.dto.ClientDTO;
 import com.alfaDEV1.incidentReportApi.persistence.entity.Client;
+import com.alfaDEV1.incidentReportApi.persistence.entity.Service;
 import com.alfaDEV1.incidentReportApi.service.interfaces.IClientService;
+import com.alfaDEV1.incidentReportApi.service.interfaces.IServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,8 @@ import java.util.Optional;
 public class ClientController {
     @Autowired
     private IClientService clientService;
+    @Autowired
+    private IServiceService serviceService;
     @PostMapping("/saveClient")
     public ResponseEntity<?> saveClient(@RequestBody ClientDTO clientDTO) throws URISyntaxException {
         if (clientDTO.getName().isBlank() || clientDTO.getLastName().isBlank() || clientDTO.getCuit() == null) {
@@ -65,8 +69,19 @@ public class ClientController {
                         .build())
                 .toList();
         return  ResponseEntity.ok(clientDTOList);
-
     }
+
+    @PutMapping("/{idClient}/idService/{idService}")
+    public ResponseEntity<?> addServiceToClient(@PathVariable Long idClient, @PathVariable Long idService) {
+        Optional<Client> optionalClient = clientService.findClientById(idClient);
+        Optional<Service> optionalService = serviceService.findServiceById(idService);
+        if (!optionalClient.isPresent() || !optionalService.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        clientService.addServiceToClient(idClient, idService);
+        return ResponseEntity.ok("Service added to client");
+    }
+
 }
 
 

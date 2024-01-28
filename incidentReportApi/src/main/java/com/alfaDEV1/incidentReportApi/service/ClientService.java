@@ -1,6 +1,7 @@
 package com.alfaDEV1.incidentReportApi.service;
 
 import com.alfaDEV1.incidentReportApi.persistence.dao.IClientDAO;
+import com.alfaDEV1.incidentReportApi.persistence.dao.IServiceDAO;
 import com.alfaDEV1.incidentReportApi.persistence.entity.Client;
 import com.alfaDEV1.incidentReportApi.service.interfaces.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import java.util.Optional;
 public class ClientService implements IClientService {
     @Autowired
     private IClientDAO clientDAO;
+    @Autowired
+    private IServiceDAO serviceDAO;
 
     @Override
     public void saveClient(Client client) {
@@ -33,5 +36,15 @@ public class ClientService implements IClientService {
     @Override
     public List<Client> findAllClients() {
         return clientDAO.findAllClients();
+    }
+    @Override
+    public void addServiceToClient(Long idClient, Long idService) {
+        List<com.alfaDEV1.incidentReportApi.persistence.entity.Service> serviceList = null;
+        Client client = clientDAO.findClientById(idClient).get();
+        com.alfaDEV1.incidentReportApi.persistence.entity.Service service = serviceDAO.findServiceById(idService).get();
+        serviceList = client.getServiceList();
+        serviceList.add(service);
+        client.setServiceList(serviceList);
+        clientDAO.saveClient(client);
     }
 }

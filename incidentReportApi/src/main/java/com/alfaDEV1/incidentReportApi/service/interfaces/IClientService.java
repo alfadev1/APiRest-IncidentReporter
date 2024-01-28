@@ -10,4 +10,5 @@ public interface IClientService {
     void deleteClientById(Long id);
     Optional<Client> findClientById(Long id);
     List<Client> findAllClients();
+    void addServiceToClient(Long idClient, Long idService);
 }

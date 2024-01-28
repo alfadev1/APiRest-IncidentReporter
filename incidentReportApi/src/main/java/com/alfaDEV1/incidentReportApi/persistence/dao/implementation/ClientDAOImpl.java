@@ -14,8 +14,9 @@ public class ClientDAOImpl implements IClientDAO {
     @Autowired
     private ClientRepository clientRepository;
     @Override
-    public void saveClient(Client client) {
+    public Client saveClient(Client client) {
         clientRepository.save(client);
+        return client;
     }
 
     @Override
