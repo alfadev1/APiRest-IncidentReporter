@@ -47,4 +47,12 @@ public class ClientService implements IClientService {
         client.setServiceList(serviceList);
         clientDAO.saveClient(client);
     }
+
+    @Override
+    public List<com.alfaDEV1.incidentReportApi.persistence.entity.Service> findHiredServicesByIdClient(Long idClient) {
+        List<com.alfaDEV1.incidentReportApi.persistence.entity.Service> serviceList = null;
+        Client client = clientDAO.findClientById(idClient).get();
+        serviceList = client.getServiceList();
+        return serviceList;
+    }
 }

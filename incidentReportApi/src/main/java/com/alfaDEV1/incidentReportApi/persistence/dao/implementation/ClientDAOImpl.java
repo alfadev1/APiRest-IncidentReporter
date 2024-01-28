@@ -2,6 +2,7 @@ package com.alfaDEV1.incidentReportApi.persistence.dao.implementation;
 
 import com.alfaDEV1.incidentReportApi.persistence.dao.IClientDAO;
 import com.alfaDEV1.incidentReportApi.persistence.entity.Client;
+import com.alfaDEV1.incidentReportApi.persistence.entity.Service;
 import com.alfaDEV1.incidentReportApi.persistence.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,4 +34,11 @@ public class ClientDAOImpl implements IClientDAO {
     public List<Client> findAllClients() {
         return clientRepository.findAll();
     }
+
+    /*
+    @Override
+    public List<Service> findHiredServicesById(Long idClient) {
+    }
+
+     */
 }

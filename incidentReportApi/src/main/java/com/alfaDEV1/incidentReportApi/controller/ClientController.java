@@ -1,6 +1,7 @@
 package com.alfaDEV1.incidentReportApi.controller;
 
 import com.alfaDEV1.incidentReportApi.persistence.dto.ClientDTO;
+import com.alfaDEV1.incidentReportApi.persistence.dto.ServiceDTO;
 import com.alfaDEV1.incidentReportApi.persistence.entity.Client;
 import com.alfaDEV1.incidentReportApi.persistence.entity.Service;
 import com.alfaDEV1.incidentReportApi.service.interfaces.IClientService;
@@ -42,6 +43,23 @@ public class ClientController {
             return ResponseEntity.ok("Register Deleted");
         }
         return ResponseEntity.badRequest().build();
+    }
+    @GetMapping("/findHiredServicesByIdClient/{idClient}")
+    public ResponseEntity<?> findHiredServicesByIdClient(@PathVariable Long idClient) {
+        Optional<Client> clientOptional = clientService.findClientById(idClient);
+        if(clientOptional.isPresent()) {
+            Client client = clientOptional.get();
+            List<ServiceDTO> serviceDTOList = clientService.findHiredServicesByIdClient(idClient)
+                    .stream()
+                    .map(service -> ServiceDTO.builder()
+                            .name(service.getName())
+                            .description(service.getDescription())
+                            .build())
+                    .toList();
+            return ResponseEntity.ok(serviceDTOList);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
     @GetMapping("/findClientById/{id}")
     public ResponseEntity<?> findClientById(@PathVariable Long id) {
