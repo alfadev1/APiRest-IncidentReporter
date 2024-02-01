@@ -32,7 +32,7 @@ public class ClientController {
         return ResponseEntity.created(new URI("/api/clients/" + clientId)).build();
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteClientById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteClientById(@PathVariable Long id) {
         Optional<ClientDTO> clientOptional = clientService.findClientById(id);
         if(clientOptional.isPresent()) {
             clientService.deleteClientById(id);
@@ -56,13 +56,13 @@ public class ClientController {
         return clientOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @GetMapping
-    public ResponseEntity<?> findAllClients() {
+    public ResponseEntity<List<ClientDTO>> findAllClients() {
         List<ClientDTO> clientDTOList = clientService.findAllClients();
         return  ResponseEntity.ok(clientDTOList);
     }
 
     @PutMapping("/{idClient}/hiredServices/{idService}")
-    public ResponseEntity<?> addServiceToClient(@PathVariable Long idClient, @PathVariable Long idService) {
+    public ResponseEntity<String> addServiceToClient(@PathVariable Long idClient, @PathVariable Long idService) {
         Optional<ClientDTO> optionalClient = clientService.findClientById(idClient);
         Optional<Service> optionalService = serviceService.findServiceById(idService);
         if (optionalClient.isEmpty() || optionalService.isEmpty()) {
