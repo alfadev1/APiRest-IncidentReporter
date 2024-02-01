@@ -22,78 +22,50 @@ public class ClientController {
     private IClientService clientService;
     @Autowired
     private IServiceService serviceService;
-    @PostMapping("/saveClient")
+    @PostMapping
     public ResponseEntity<?> saveClient(@RequestBody ClientDTO clientDTO) throws URISyntaxException {
+        //TODO Estas condiciones pueden ser reemplazadas por el validador @NotNull https://www.javaguides.net/2021/04/spring-boot-dto-validation-example.html
         if (clientDTO.getName().isBlank() || clientDTO.getLastName().isBlank() || clientDTO.getCuit() == null) {
             return ResponseEntity.badRequest().build();
         }
-        clientService.saveClient(Client.builder()
-                .name(clientDTO.getName())
-                .lastName(clientDTO.getLastName())
-                .cuit(clientDTO.getCuit())
-                .companyName(clientDTO.getCompanyName())
-                .build());
-        return ResponseEntity.created(new URI("/api/clients/saveClient")).build();
+        final long clientId = clientService.saveClient(clientDTO);
+        return ResponseEntity.created(new URI("/api/clients/" + clientId)).build();
     }
-    @DeleteMapping("/deleteClientById/{id}")
-    public ResponseEntity<?> deleteClientById(@PathVariable Long id) {
-        Optional<Client> clientOptional = clientService.findClientById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteClientById(@PathVariable Long id) {
+        Optional<ClientDTO> clientOptional = clientService.findClientById(id);
         if(clientOptional.isPresent()) {
             clientService.deleteClientById(id);
             return ResponseEntity.ok("Register Deleted");
         }
         return ResponseEntity.badRequest().build();
     }
-    @GetMapping("/findHiredServicesByIdClient/{idClient}")
-    public ResponseEntity<?> findHiredServicesByIdClient(@PathVariable Long idClient) {
-        Optional<Client> clientOptional = clientService.findClientById(idClient);
+    @GetMapping("/{idClient}/hiredServices")
+    public ResponseEntity<List<ServiceDTO>> findHiredServicesByIdClient(@PathVariable Long idClient) {
+        //TODO Búsqueda en base de datos duplicada, se puede optimizar
+        Optional<ClientDTO> clientOptional = clientService.findClientById(idClient);
         if(clientOptional.isPresent()) {
-            Client client = clientOptional.get();
-            List<ServiceDTO> serviceDTOList = clientService.findHiredServicesByIdClient(idClient)
-                    .stream()
-                    .map(service -> ServiceDTO.builder()
-                            .name(service.getName())
-                            .description(service.getDescription())
-                            .build())
-                    .toList();
+            List<ServiceDTO> serviceDTOList = clientService.findHiredServicesByIdClient(idClient);
             return ResponseEntity.ok(serviceDTOList);
-        } else {
-            return ResponseEntity.badRequest().build();
         }
+        return ResponseEntity.badRequest().build();
     }
-    @GetMapping("/findClientById/{id}")
-    public ResponseEntity<?> findClientById(@PathVariable Long id) {
-        Optional<Client> clientOptional = clientService.findClientById(id);
-        if(clientOptional.isPresent()) {
-            Client client = clientOptional.get();
-            ClientDTO clientDTO = ClientDTO.builder()
-                    .companyName(client.getCompanyName())
-                    .name(client.getName())
-                    .lastName(client.getLastName())
-                    .cuit(client.getCuit())
-                    .build();
-            return ResponseEntity.ok(clientDTO);
-        }
-        return ResponseEntity.notFound().build();
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientDTO> findClientById(@PathVariable Long id) {
+        Optional<ClientDTO> clientOptional = clientService.findClientById(id);
+        return clientOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-    @GetMapping("/findAllClients")
-    public ResponseEntity<?> findAllClients() {
-        List<ClientDTO> clientDTOList =clientService.findAllClients()
-                .stream()
-                .map(client -> ClientDTO.builder()
-                        .name(client.getName())
-                        .lastName(client.getLastName())
-                        .cuit(client.getCuit())
-                        .build())
-                .toList();
+    @GetMapping
+    public ResponseEntity<List<ClientDTO>> findAllClients() {
+        List<ClientDTO> clientDTOList = clientService.findAllClients();
         return  ResponseEntity.ok(clientDTOList);
     }
 
-    @PutMapping("/{idClient}/idService/{idService}")
-    public ResponseEntity<?> addServiceToClient(@PathVariable Long idClient, @PathVariable Long idService) {
-        Optional<Client> optionalClient = clientService.findClientById(idClient);
+    @PutMapping("/{idClient}/hiredServices/{idService}")
+    public ResponseEntity<String> addServiceToClient(@PathVariable Long idClient, @PathVariable Long idService) {
+        Optional<ClientDTO> optionalClient = clientService.findClientById(idClient);
         Optional<Service> optionalService = serviceService.findServiceById(idService);
-        if (!optionalClient.isPresent() || !optionalService.isPresent()) {
+        if (optionalClient.isEmpty() || optionalService.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         clientService.addServiceToClient(idClient, idService);
